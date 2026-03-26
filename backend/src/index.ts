@@ -22,6 +22,9 @@ app.use('/api/users',    userRoutes);
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
 
+// Root endpoint for Render health checks
+app.get('/', (_req, res) => res.json({ message: 'SPN Backend API', status: 'running', endpoints: ['/api/health', '/api/auth', '/api/drivers', '/api/vehicles', '/api/trips', '/api/users'] }));
+
 const PORT = process.env.PORT || 5000;
 
 connectDB()

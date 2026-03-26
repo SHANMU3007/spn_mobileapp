@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6
+    container_name: spn-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=spn_db
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spn-backend
+    restart: unless-stopped
+    ports:
+      - "10000:10000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/spn_db
+      - PORT=10000
+      - NODE_ENV=production
+    depends_on:
+      - mongodb
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:10000/api/health')"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  mongodb_data:
