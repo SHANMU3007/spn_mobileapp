@@ -2,8 +2,7 @@ services:
   - type: web
     name: spn-backend
     root: backend
-    buildCommand: npm install && npm run build
-    startCommand: npm start
+    dockerfilePath: Dockerfile
     envVars:
       - key: MONGO_URI
         value: mongodb://localhost:27017/spn_db
